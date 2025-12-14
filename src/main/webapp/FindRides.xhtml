@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:loadBundle basename="Etiquetas" var="msg" />
+<f:metadata>
+	<f:viewParam name="lang" value="#{localeBean.selectedLanguage}" />
+	<f:viewAction
+		action="#{localeBean.setSelectedLanguage(localeBean.selectedLanguage)}" />
+</f:metadata>
+
+
+<h:head>
+	<title>Find Rides</title>
+	<h:outputStylesheet library="css" name="styles.css" />
+</h:head>
+
+<h:body>
+
+	<h:form style="width:700px; margin:30px auto; font-family:Tahoma;">
+
+		<h2>#{msg['FindRidesGUI.FindRides']}</h2>
+
+		<!-- ORIGIN -->
+		<h:outputLabel value="#{msg['CreateRideGUI.Origin']}" for="origin" />
+		<h:selectOneMenu id="origin" value="#{findRideBean.from}"
+			style="width:200px;">
+			<f:selectItems value="#{findRideBean.origins}" var="city"
+				itemLabel="#{city}" itemValue="#{city}" />
+			<f:ajax listener="#{findRideBean.onOriginChange}"
+				render="destination" />
+		</h:selectOneMenu>
+
+		<br />
+		<br />
+
+		<!-- DESTINATION -->
+		<h:outputLabel value="#{msg['CreateRideGUI.Destination']}"
+			for="destination" />
+		<h:selectOneMenu id="destination" value="#{findRideBean.to}"
+			style="width:200px;">
+			<f:selectItems value="#{findRideBean.destinations}" var="city"
+				itemLabel="#{city}" itemValue="#{city}" />
+		</h:selectOneMenu>
+
+		<br />
+		<br />
+
+		<!-- DATE -->
+		<h:outputLabel value="#{msg['CreateRideGUI.Ridedate']}" for="date" />
+		<p:datePicker id="date" value="#{findRideBean.date}" showIcon="true"
+			pattern="yyyy-MM-dd" />
+
+
+		<br />
+		<br />
+
+		<!-- Rides Table (empty) -->
+		<h:outputText value="#{msg['FindRidesGUI.Ride']}"
+			style="font-weight:bold;" />
+		<br />
+		<br />
+		<h:dataTable value="#{findRideBean.rides}" var="ride" border="1"
+			style="width:100%; text-align:center;"
+			rendered="#{not empty findRideBean.rides}">
+			<h:column>
+				<f:facet name="header">#{msg['FindRidesGUI.Driver']}</f:facet>
+				<h:outputText value="#{ride.driver.name}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">#{msg['FindRidesGUI.NPlaces']}</f:facet>
+				<h:outputText value="#{ride.nPlaces}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">#{msg['FindRidesGUI.Price']}</f:facet>
+				<h:outputText value="#{ride.price}" />
+			</h:column>
+		</h:dataTable>
+
+		<h:outputText value="#{msg['FindRidesGUI.NoRides']}"
+			rendered="#{empty findRideBean.rides}"
+			style="color:red; font-weight:bold;" />
+
+		<h:commandButton value="Search Rides"
+			action="#{findRideBean.findRides}">
+			<f:ajax execute="@form" render="@form" />
+		</h:commandButton>
+
+		<br />
+
+		<!-- BUTTONS -->
+		<h:commandButton value="#{msg['CreateRideGUI.Cancel']}"
+			action="LandingPage?faces-redirect=true"
+			style="width:220px; height:40px; margin-top:10px;" />
+
+	</h:form>
+
+</h:body>
+</html>
